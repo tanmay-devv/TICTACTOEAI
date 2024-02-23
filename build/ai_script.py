@@ -10,11 +10,11 @@ def minimax(board, depth, is_maximizing):
     pass
 
 # Read game state from command-line arguments or from file
-game_state = ...
+game_state = sys.argv[1]
 
 # Determine the next optimal move using minimax algorithm
 next_move = minimax(game_state, depth=3, is_maximizing=True)
 
 # Print the next optimal move to stdout
-print(f"{next_move[0]} {next_move[1]}")
 
+print(str(next_move[0]) + " " + str(next_move[1]))

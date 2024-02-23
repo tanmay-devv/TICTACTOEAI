@@ -1,37 +1,12 @@
 #include <iostream>
-#include <cstdio>
 #include <string>
-
+#include <cstdlib> // For system()
+#include <sstream>
 using namespace std;
 
-
-
-// Function to get the next move from the AI
-int getNextMove(char board[3][3]) {
-    FILE *fp;
-    char path[1035];
-
-    // Run the Python script to get the next move
-    fp = popen("python ai_script.py", "r");
-    if (fp == NULL) {
-        cout << "Failed to run the command!\n";
-        exit(1);
-    }
-
-    // Read the next move from the output of the Python script
-    int nextMove;
-    if (fgets(path, sizeof(path)-1, fp) != NULL) {
-        nextMove = atoi(path);
-    }
-
-    // Close the file pointer
-    pclose(fp);
-
-    return nextMove;
-}
-
-// Function to draw the Tic-Tac-Toe board 
-void drawBoard(char board[3][3]) {
+// Function to draw the Tic-Tac-Toe board
+void drawBoard(char board[3][3])
+{
     cout << "-------------\n";
     for (int i = 0; i < 3; i++) {
         cout << "| ";
@@ -42,9 +17,10 @@ void drawBoard(char board[3][3]) {
     }
 }
 
-// Function to check for a win 
-bool checkWin(char board[3][3], char player) {
-    // Check rows, columns, and diagonals 
+// Function to check for a win
+bool checkWin(char board[3][3], char player)
+{
+    // Check rows, columns, and diagonals
     for (int i = 0; i < 3; i++) {
         if (board[i][0] == player && board[i][1] == player
             && board[i][2] == player)
@@ -62,75 +38,88 @@ bool checkWin(char board[3][3], char player) {
     return false;
 }
 
-int main() {
+int main()
+{
+    // Initialize the board and players
     char board[3][3] = { { ' ', ' ', ' ' },
                          { ' ', ' ', ' ' },
-     			 { ' ', ' ', ' ' } };
-	
-    string str;
-    for (int i =0;i<3;i++) {
-    	for(int j=0;j<3;j++) {
-		str += board[i][j];
-	}
+                         { ' ', ' ', ' ' } };
+
+
+
+   
+
+    // Capture the next move from the Python script using getline
+    string next_move_str;
+    getline(cin, next_move_str); // Read the entire line
+
+    // Parse the next move string
+    istringstream iss(next_move_str);
+    int nextMoveRow, nextMoveCol;
+    iss >> nextMoveRow >> nextMoveCol;
+
+    // Check for parsing errors
+    if (iss.fail()) {
+        cerr << "Error: Invalid move string received from Python script." << endl;
+        return 1; // Indicate error
     }
 
-
-
+    // Make the move
+    board[nextMoveRow][nextMoveCol] = 'O'; // Assuming 'O' represents A
 
     char player = 'X';
     int row, col;
-    int turn; // Declare turn here 
+    int turn; // Declare turn here
 
     cout << "Welcome to Tic-Tac-Toe!\n";
 
-
-    // Game loop 
+    // Game loop
     for (turn = 0; turn < 9; turn++) {
-        // Draw the board 
+        // Draw the board
         drawBoard(board);
 
-        // Player's turn
-        if (player == 'X') {
-            // Prompt for valid input 
-            while (true) {
-                cout << "Player " << player
-                    << ", enter row (0-2) and column (0-2): ";
-                cin >> row >> col;
+        // Prompt for valid input
+        while (true) {
+            cout << "Player " << player
+                << ", enter row (0-2) and column (0-2): ";
+            cin >> row >> col;
 
-                if (board[row][col] != ' ' || row < 0 || row > 2
-                    || col < 0 || col > 2) {
-                    cout << "Invalid move. Try again.\n";
-                }
-                else {
-                    break; // Valid input, exit the loop. 
-                }
+            if (board[row][col] != ' ' || row < 0 || row > 2
+                || col < 0 || col > 2) {
+                cout << "Invalid move. Try again.\n";
+            }
+            else {
+                break; // Valid input, exit the loop.
             }
         }
-        else {
-            // AI's turn
-            int nextMove = getNextMove(board);
-            row = nextMove / 3;
-            col = nextMove % 3;
+        string str;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                str += board[i][j];
         }
+         // Execute the Python script to determine the next move
+        string command = "python3 ai_script.py " + str;
+        system(command.c_str());
+    }
 
-        // Make the move 
+        // Make the move
         board[row][col] = player;
 
-        // Check for a win after making a move 
+        // Check for a win after making a move
         if (checkWin(board, player)) {
             drawBoard(board);
             cout << "Player " << player << " wins!\n";
-            break; // Exit the loop after a win. 
+            break; // Exit the loop after a win.
         }
 
-        // Switch to the other player 
+        // Switch to the other player
         player = (player == 'X') ? 'O' : 'X';
     }
 
-    // End of the game 
+    // End of the game
     drawBoard(board);
 
-    // Check for a draw 
+    // Check for a draw
     if (turn == 9 && !checkWin(board, 'X')
         && !checkWin(board, 'O')) {
         cout << "It's a draw!\n";
