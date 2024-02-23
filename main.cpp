@@ -1,6 +1,10 @@
 #include <iostream>
 #include <cstdio>
+#include <string>
+
 using namespace std;
+
+
 
 // Function to get the next move from the AI
 int getNextMove(char board[3][3]) {
@@ -67,6 +71,7 @@ int main() {
     int turn; // Declare turn here 
 
     cout << "Welcome to Tic-Tac-Toe!\n";
+
 
     // Game loop 
     for (turn = 0; turn < 9; turn++) {
