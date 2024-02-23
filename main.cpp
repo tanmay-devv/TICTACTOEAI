@@ -65,7 +65,18 @@ bool checkWin(char board[3][3], char player) {
 int main() {
     char board[3][3] = { { ' ', ' ', ' ' },
                          { ' ', ' ', ' ' },
-                         { ' ', ' ', ' ' } };
+     			 { ' ', ' ', ' ' } };
+	
+    string str;
+    for (int i =0;i<3;i++) {
+    	for(int j=0;j<3;j++) {
+		str += board[i][j];
+	}
+    }
+
+
+
+
     char player = 'X';
     int row, col;
     int turn; // Declare turn here 
