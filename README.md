@@ -1,3 +1,5 @@
+# the project has been cancelled, and will not be worked on!
+
 # TICTACTOEAI
 i created a tic tac toe ai as a basic first machine learning game ai ever (for me).
 # IT IS UNDER CONSTRUCTION RIGHT NOW!
